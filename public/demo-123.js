@@ -30,6 +30,7 @@
     };
   }else{ /* Worker thread */
     console.log("Running demo from Worker thread.");
+// Alternately:
     logHtml = function(cssClass,...args){
       postMessage({
         type:'log',
@@ -45,7 +46,14 @@
     const capi = sqlite3.capi/*C-style API*/,
           oo = sqlite3.oo1/*high-level OO API*/;
     log("sqlite3 version",capi.sqlite3_libversion(), capi.sqlite3_sourceid());
-    const db = new oo.DB("/mydb.sqlite3",'ct');
+    let db;
+    if(sqlite3.opfs){
+      db = new sqlite3.opfs.OpfsDb('/mydb.sqlite3');
+      log("The OPFS is available.");
+    } else {
+      db = new oo.DB("/mydb.sqlite3",'ct');
+      log("The OPFS is not available.");
+    }
     log("transient db =",db.filename);
     /**
        Never(!) rely on garbage collection to clean up DBs and
@@ -61,7 +69,7 @@
       //Equivalent:
       db.exec({
         sql:"CREATE TABLE IF NOT EXISTS t(a,b)"
-        // ... numerous other options ... 
+        // ... numerous other options ...
       });
       // SQL can be either a string or a byte array
       // or an array of strings which get concatenated
@@ -81,7 +89,7 @@
           // bind by parameter name...
           bind: {$a: i * 10, $b: i * 20}
         });
-      }    
+      }
 
       log("Insert using a prepared statement...");
       let q = db.prepare([
@@ -235,10 +243,10 @@
 
        - get change count (total or statement-local, 32- or 64-bit)
        - get a DB's file name
-    
+
        Misc. Stmt features:
 
-       - Various forms of bind() 
+       - Various forms of bind()
        - clearBindings()
        - reset()
        - Various forms of step()
