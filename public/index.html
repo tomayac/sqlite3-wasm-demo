@@ -31,8 +31,8 @@
         document.body.append(ln);
       };
 
-      const w = new Worker('worker.js?sqlite3.dir=jswasm');
-      w.onmessage = function ({ data }) {
+      const worker = new Worker('worker.js?sqlite3.dir=jswasm');
+      worker.onmessage = function ({ data }) {
         switch (data.type) {
           case 'log':
             logHtml(data.payload.cssClass, ...data.payload.args);
