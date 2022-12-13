@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-us">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -17,19 +17,17 @@
     </style>
   </head>
   <body>
-    <h1>1-2-sqlite3 worker demo</h1>
-    <script>(function(){
+    <h1>Hello, sqlite3</h1>
+    <script>
+    (function(){
       const logHtml = function(cssClass,...args){
         const ln = document.createElement('div');
         if(cssClass) ln.classList.add(cssClass);
         ln.append(document.createTextNode(args.join(' ')));
         document.body.append(ln);
       };
-      const w = new Worker("demo-123.js?sqlite3.dir=jswasm&opfs-verbose&opfs-sanity-check"
-                           /* Note the URL argument on that name. See
-                              the notes in demo-123.js (search for
-                              "importScripts") for why we need
-                              that. */);
+
+      const w = new Worker("worker.js?sqlite3.dir=jswasm");
       w.onmessage = function({data}){
         switch(data.type){
             case 'log':
